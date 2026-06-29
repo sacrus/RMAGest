@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RMA Gest — Manual de Instalação e Utilização</title>
+    <meta name="description" content="Manual oficial de instalação e utilização do RMA Gest - Sistema de Gestão de Fichas de Reparação e RMA.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(22, 28, 45, 0.4);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --primary-color: #8b5cf6;
+            --primary-glow: rgba(139, 92, 246, 0.3);
+            --secondary-color: #06b6d4;
+            --secondary-glow: rgba(6, 182, 212, 0.3);
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --code-bg: #1e293b;
+            --alert-info-bg: rgba(6, 182, 212, 0.1);
+            --alert-info-border: rgba(6, 182, 212, 0.2);
+            --sidebar-width: 280px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.06) 0%, transparent 45%),
+                radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 1) 0%, #070a13 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Layout */
+        .wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(11, 15, 25, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 30px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: #ffffff;
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .nav-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .nav-item a {
+            display: block;
+            padding: 10px 14px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item a:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateX(4px);
+        }
+
+        /* Main Content Container */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 40px 60px 80px 60px;
+            max-width: 1200px;
+        }
+
+        /* Header / Top Bar */
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        /* Language Switcher */
+        .lang-switcher {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 4px;
+            border-radius: 30px;
+            display: flex;
+            position: relative;
+            width: 250px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .lang-switcher button {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 8px 0;
+            width: 121px;
+            border-radius: 25px;
+            z-index: 2;
+            transition: color 0.3s ease;
+            text-align: center;
+        }
+
+        .lang-switcher button.active {
+            color: #ffffff;
+        }
+
+        .lang-switcher .slider {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            bottom: 4px;
+            width: 121px;
+            background: linear-gradient(135deg, var(--primary-color), #7c3aed);
+            border-radius: 25px;
+            z-index: 1;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 10px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Documentation Styling */
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: linear-gradient(to right, #ffffff, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-top: 50px;
+            margin-bottom: 24px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 30px;
+            margin-bottom: 16px;
+            color: #f8fafc;
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: #cbd5e1;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin-bottom: 24px;
+            margin-left: 24px;
+            color: #cbd5e1;
+        }
+
+        li {
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        li strong {
+            color: #f8fafc;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: border-color 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(139, 92, 246, 0.2);
+        }
+
+        /* Alert/Callout Boxes */
+        .alert {
+            background: var(--alert-info-bg);
+            border-left: 4px solid var(--secondary-color);
+            border-radius: 0 12px 12px 0;
+            padding: 20px;
+            margin: 30px 0;
+        }
+
+        .alert-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--secondary-color);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert p {
+            margin-bottom: 0;
+            font-size: 0.95rem;
+            color: #e2e8f0;
+        }
+
+        /* Code Blocks */
+        pre {
+            background: var(--code-bg);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 16px 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin-bottom: 24px;
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+        }
+
+        code {
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: #f472b6;
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: inherit;
+            font-size: inherit;
+        }
+
+        /* Mockup Images */
+        .image-container {
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .mockup-img {
+            max-width: 100%;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .mockup-img:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px rgba(139, 92, 246, 0.25);
+        }
+
+        .image-caption {
+            margin-top: 12px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.03);
+            text-align: left;
+            padding: 12px 16px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+            color: #f8fafc;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: #cbd5e1;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 80px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 24px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .footer a {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Language Toggle Display */
+        .lang-en {
+            display: none; /* Iniciar em PT */
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 992px) {
+            .sidebar {
+                display: none; /* Ocultar barra lateral em ecrãs pequenos */
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 30px 24px;
+            }
+
+            .top-bar {
+                justify-content: center;
+                margin-bottom: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <!-- Sidebar Navigation (Dinâmica por Idioma) -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <div class="logo-icon">R</div>
+                <div class="logo-text">RMA Gest Docs</div>
+            </div>
+            
+            <!-- Menu Português -->
+            <ul class="nav-menu lang-pt">
+                <li class="nav-title">Navegação</li>
+                <li class="nav-item"><a href="#pt-requisitos">1. Requisitos</a></li>
+                <li class="nav-item"><a href="#pt-instalacao">2. Instalação</a></li>
+                <li class="nav-item"><a href="#pt-cliente">3. Área de Clientes</a></li>
+                <li class="nav-item"><a href="#pt-tecnico">4. Área Técnica</a></li>
+                <li class="nav-item"><a href="#pt-definicoes">5. Definições Globais</a></li>
+            </ul>
+
+            <!-- Menu Inglês -->
+            <ul class="nav-menu lang-en">
+                <li class="nav-title">Navigation</li>
+                <li class="nav-item"><a href="#en-requirements">1. Requirements</a></li>
+                <li class="nav-item"><a href="#en-installation">2. Installation</a></li>
+                <li class="nav-item"><a href="#en-client">3. Client Area</a></li>
+                <li class="nav-item"><a href="#en-technical">4. Technical Area</a></li>
+                <li class="nav-item"><a href="#en-settings">5. Global Settings</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- Top bar containing the Language Switcher -->
+            <div class="top-bar">
+                <div class="lang-switcher">
+                    <button id="btn-pt" class="active" onclick="setLanguage('pt')">Português</button>
+                    <button id="btn-en" onclick="setLanguage('en')">English</button>
+                    <div class="slider"></div>
+                </div>
+            </div>
+
+            <!-- ================================================================= -->
+            <!-- PORTUGUESE CONTENT                                                -->
+            <!-- ================================================================= -->
+            <div class="lang-pt">
+                <h1>Manual de Instalação e Utilização</h1>
+                <p class="subtitle">Guia oficial do utilizador e instalador para o RMA Gest — Sistema de Gestão de Fichas de Reparação e RMA.</p>
+
+                <!-- Section 1 -->
+                <section id="pt-requisitos" class="card">
+                    <h2>🛠️ 1. Requisitos do Sistema</h2>
+                    <p>Antes de iniciar a instalação, certifique-se de que o seu servidor cumpre os seguintes requisitos mínimos:</p>
+                    <ul>
+                        <li><strong>Servidor Web:</strong> Apache, Nginx, IIS ou equivalente.</li>
+                        <li><strong>Versão do PHP:</strong> PHP 7.4 ou superior (Recomendado: PHP 8.x).</li>
+                        <li><strong>Extensões do PHP Necessárias:</strong>
+                            <ul>
+                                <li><code>PDO</code> (e o driver correspondente: <code>pdo_sqlite</code> e/ou <code>pdo_mysql</code>)</li>
+                                <li><code>mbstring</code> (para tratamento de caracteres especiais multibyte)</li>
+                                <li><code>openssl</code> (para envio de emails seguros SMTP e integrações de API)</li>
+                                <li><code>curl</code> (para comunicações com o gateway de WhatsApp)</li>
+                                <li><code>gd</code> (para manipulação de imagens e logótipos)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Base de Dados:</strong>
+                            <ul>
+                                <li><strong>SQLite (Recomendado):</strong> Extremamente prático. Guarda tudo de forma segura num único ficheiro local (<code>src/rmagest.sqlite</code>).</li>
+                                <li><strong>MySQL / MariaDB:</strong> Ideal para maior escalabilidade ou ligações em rede estáveis.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- Section 2 -->
+                <section id="pt-instalacao" class="card">
+                    <h2>🚀 2. Guia de Instalação e Configuração</h2>
+                    <p>Existem dois caminhos possíveis para instalar e executar o RMA Gest: através da versão portátil (Windows) ou num servidor web próprio.</p>
+                    
+                    <h3>Opção A: Instalação Portátil (Windows - Recomendado para Testes/Uso Local)</h3>
+                    <p>A aplicação já traz um servidor PHP integrado pré-configurado com suporte a SQLite, sem necessidade de instalar bases de dados adicionais.</p>
+                    <ol>
+                        <li>Aceda à pasta <code>RMAGest</code> descompactada.</li>
+                        <li>Dê duplo clique no ficheiro **<code>Iniciar - Start.bat</code>**. Uma janela da consola irá abrir e o seu navegador de internet predefinido abrirá automaticamente em <code>http://localhost:8080/</code>.</li>
+                        <li>Siga o instalador web guiado e selecione a base de dados <strong>SQLite (Recomendado)</strong> para concluir a configuração.</li>
+                        <li><strong>Importante:</strong> Não feche a janela da consola enquanto estiver a usar o site. Para parar o servidor de forma segura, feche a consola ou dê duplo clique em <strong><code>Parar - Stop.bat</code></strong>.</li>
+                    </ol>
+
+                    <h3>Opção B: Instalação num Servidor Web Próprio (Custom/Produção)</h3>
+                    <p>Se prefere alojar o RMA Gest no seu próprio servidor (como um servidor Linux, alojamento partilhado cPanel, ou localmente usando XAMPP/WAMP/Laragon):</p>
+                    <ol>
+                        <li><strong>Copiar os Ficheiros:</strong> Copie todo o conteúdo da pasta <strong><code>www</code></strong> para a diretoria pública do seu servidor (ex: <code>/var/www/html/</code> em Linux, <code>public_html/</code> em cPanel, ou <code>htdocs/</code> no XAMPP).</li>
+                        <li><strong>Acesso pelo Navegador:</strong> Aceda ao endereço do seu servidor pelo navegador (ex: <code>http://o-seu-dominio.com/</code> ou <code>http://localhost/</code>).</li>
+                        <li><strong>Instalador Guiado:</strong> O sistema identificará a falta do ficheiro <code>config.php</code> e redirecionará para o assistente web guiado (<code>install.php</code>).</li>
+                        <li><strong>Base de Dados:</strong>
+                            <ul>
+                                <li><strong>Se usar SQLite (Recomendado):</strong> Escolha SQLite no instalador. O ficheiro será criado em <code>src/rmagest.sqlite</code>. Certifique-se de que a pasta <code>src</code> tem <strong>permissões de escrita</strong> (ex: <code>chmod 775</code> ou <code>777</code> em Linux) para que o PHP possa ler e gravar a base de dados.</li>
+                                <li><strong>Se usar MySQL/MariaDB:</strong> Crie uma base de dados limpa e introduza os dados de ligação no instalador (Host, Porta, Utilizador, Senha e Nome da Base de Dados).</li>
+                            </ul>
+                        </li>
+                        <li><strong>Configurações Finais:</strong> Complete os dados da empresa, logótipo, SMTP de email e a conta do administrador. O instalador gerará o ficheiro <code>config.php</code> na raiz.</li>
+                    </ol>
+                </section>
+
+                <!-- Section 3 -->
+                <section id="pt-cliente" class="card">
+                    <h2>👥 3. Utilização: Área do Cliente (Portal Público)</h2>
+                    <p>O portal público foi projetado para que o cliente interaja diretamente com a oficina técnica de forma intuitiva.</p>
+                    
+                    <div class="image-container">
+                        <img src="assets/images/client_portal.png" class="mockup-img" alt="Portal Público do Cliente">
+                        <div class="image-caption">Ecrã de pesquisa e solicitação pública de reparações para clientes.</div>
+                    </div>
+
+                    <h3>Funcionalidades Disponíveis:</h3>
+                    <ul>
+                        <li><strong>Pesquisa Rápida por Código:</strong> O cliente introduz o número do seu bilhete de reparação (ex: <code>REP-2026-00001</code>) na barra de pesquisa estilo Google para ver de imediato a evolução do estado do equipamento.</li>
+                        <li><strong>Solicitação de Reparação (RMA Online):</strong> O cliente preenche uma ficha com as suas informações de contacto, descreve o problema do aparelho e pode tirar e anexar uma fotografia do estado físico da entrega.</li>
+                        <li><strong>Acompanhamento em Tempo Real:</strong> A linha de tempo apresenta as fases (<em>Em análise, Em Diagnóstico, Reparado, etc.</em>).</li>
+                        <li><strong>Visualização de Orçamento:</strong> O cliente visualiza a estimativa de custos e o estado de pagamento (Pendente ou Pago).</li>
+                        <li><strong>Conversação com o Técnico:</strong> Inserindo o código de acesso secreto de 6 dígitos enviado por email/WhatsApp, o cliente desbloqueia um chat bidirecional em tempo real com o laboratório para responder a orçamentos ou partilhar informações adicionais.</li>
+                    </ul>
+                </section>
+
+                <!-- Section 4 -->
+                <section id="pt-tecnico" class="card">
+                    <h2>🛠️ 4. Utilização: Área Técnica (Painel do Técnico)</h2>
+                    <p>Aceda a <code>index.php?route=tech/login</code> com as suas credenciais para aceder ao sistema de gestão de oficina.</p>
+
+                    <div class="image-container">
+                        <img src="assets/images/tech_dashboard.png" class="mockup-img" alt="Painel do Técnico">
+                        <div class="image-caption">Painel principal do técnico mostrando estatísticas gerais e a tabela de reparações.</div>
+                    </div>
+
+                    <h3>4.1. O Painel de Controlo (Dashboard)</h3>
+                    <p>Fornece indicadores gerais de gestão em tempo real:</p>
+                    <ul>
+                        <li><strong>Indicadores Rápidos (KPIs):</strong> Total de reparações em progresso, equipamentos parados a aguardar decisão do cliente, reparações prontas a entregar e alertas de stock baixo.</li>
+                        <li><strong>Pesquisa Geral e Filtros:</strong> Pesquise fichas de reparação por código de RMA, nome de cliente ou modelo de equipamento e filtre por estado específico.</li>
+                    </ul>
+
+                    <h3>4.2. Gestão de Fichas de Reparação (RMA)</h3>
+                    <p>Ao abrir um processo de RMA, o técnico tem acesso às seguintes ações:</p>
+                    <ul>
+                        <li><strong>Atualizar Estado & Notificar:</strong> Ao mudar o estado da reparação e inserir um comentário explicativo, o sistema envia automaticamente um email ou WhatsApp ao cliente com o progresso.</li>
+                        <li><strong>Relatórios Privados:</strong> Notas técnicas de laboratório visíveis apenas pelos funcionários.</li>
+                        <li><strong>Controlo de Peças Utilizadas:</strong> Adicione peças na reparação. O técnico pode deduzir os itens do inventário geral de stock da oficina ou escrever as peças manualmente (definindo preço e quantidade). O valor total é somado ao orçamento de forma automática.</li>
+                        <li><strong>Impressão de Fichas:</strong> Imprima o relatório de suporte técnico para anexar fisicamente ao equipamento ou entregar no levantamento.</li>
+                        <li><strong>Chat Integrado:</strong> Canal direto de contacto com o cliente que permite anexar fotografias de componentes danificados.</li>
+                        <li><strong>RGPD (Esquecer Cliente):</strong> Apaga permanentemente e de forma irreversível os dados pessoais do cliente em cumprimento com o regulamento de privacidade, mantendo apenas a faturação.</li>
+                    </ul>
+
+                    <h3>4.3. Controlo de Stock (Inventário)</h3>
+                    <p>Controle as peças de substituição de laboratório (ex: Ecrãs, Baterias, SSDs):</p>
+                    <ul>
+                        <li>Registo de peças com referência SKU, quantidade atual e preço de venda.</li>
+                        <li>Alerta visual automático quando a quantidade desce abaixo do limiar de segurança.</li>
+                    </ul>
+
+                    <h3>4.4. Relatórios e Estatísticas</h3>
+                    <p>Geração de relatórios por intervalo de datas para analisar faturação estimada, valores faturados cobrados e valores de orçamentos pendentes.</p>
+                </section>
+
+                <!-- Section 5 -->
+                <section id="pt-definicoes" class="card">
+                    <h2>⚙️ 5. Definições Globais do Sistema</h2>
+                    <p>Reservado a administradores, permite personalizar o funcionamento global da aplicação:</p>
+                    <ol>
+                        <li><strong>Definições Gerais:</strong> Nome da oficina, logótipo da empresa e favicon do navegador.</li>
+                        <li><strong>Servidor de Email (SMTP):</strong> Configurações para envio automático de notificações.</li>
+                        <li><strong>Workflow de Estados:</strong> Adicione, reordene ou apague estados do fluxo de reparação exibido na timeline do cliente.</li>
+                        <li><strong>Tipos de Dispositivo:</strong> Categorias de aparelhos aceites no laboratório.</li>
+                        <li><strong>Utilizadores e Permissões:</strong> Crie novos técnicos e defina as suas permissões específicas (acesso a definições, stock, eliminação de RMAs, relatórios, etc.).</li>
+                        <li><strong>Integração de WhatsApp:</strong> Configure o endpoint da sua API Gateway de WhatsApp, defina o token de acesso e envie payloads em JSON parametrizados com <code>{phone}</code> e <code>{message}</code>.</li>
+                        <li><strong>Modelos de Mensagem:</strong> Edite os textos predefinidos de notificações de Email e WhatsApp (novos pedidos, atualizações de estado, mensagens de chat) com o suporte a placeholders como <code>{client_name}</code>, <code>{rma_number}</code>, etc.</li>
+                        <li><strong>Código de Integração (Widget):</strong> Construtor visual de um painel de pesquisa externo. Copie o código gerado em HTML/CSS para colocar no site institucional da sua empresa, permitindo que os clientes pesquisem as reparações diretamente a partir da sua página principal.</li>
+                        <li><strong>Form Builder (Editor de Formulário):</strong> Desenhe um formulário de solicitação de reparação personalizado, com arrastar e soltar de novos campos, adaptando a recolha de dados ao seu modelo de negócio.</li>
+                    </ol>
+                </section>
+            </div>
+
+            <!-- ================================================================= -->
+            <!-- ENGLISH CONTENT                                                   -->
+            <!-- ================================================================= -->
+            <div class="lang-en">
+                <h1>Installation & Usage Manual</h1>
+                <p class="subtitle">Official user and installer guide for RMA Gest — Repair Ticket and RMA Management System.</p>
+
+                <!-- Section 1 -->
+                <section id="en-requirements" class="card">
+                    <h2>🛠️ 1. System Requirements</h2>
+                    <p>Before proceeding with the installation, make sure your server meets the following minimum requirements:</p>
+                    <ul>
+                        <li><strong>Web Server:</strong> Apache, Nginx, IIS, or equivalent.</li>
+                        <li><strong>PHP Version:</strong> PHP 7.4 or higher (Recommended: PHP 8.x).</li>
+                        <li><strong>Required PHP Extensions:</strong>
+                            <ul>
+                                <li><code>PDO</code> (along with the corresponding driver: <code>pdo_sqlite</code> and/or <code>pdo_mysql</code>)</li>
+                                <li><code>mbstring</code> (for multibyte string handling)</li>
+                                <li><code>openssl</code> (for secure SMTP emails and API communications)</li>
+                                <li><code>curl</code> (for WhatsApp API gateway integrations)</li>
+                                <li><code>gd</code> (for logo and image processing)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Database Engine:</strong>
+                            <ul>
+                                <li><strong>SQLite (Recommended):</strong> Highly convenient. Stores all database tables locally inside a single secure file (<code>src/rmagest.sqlite</code>).</li>
+                                <li><strong>MySQL / MariaDB:</strong> Ideal for stable local area networks or shared cloud hosting servers.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- Section 2 -->
+                <section id="en-installation" class="card">
+                    <h2>🚀 2. Installation and Configuration Guide</h2>
+                    <p>There are two possible paths to install and run RMA Gest: via the portable version (Windows) or on your own web server.</p>
+                    
+                    <h3>Option A: Portable Installation (Windows - Recommended for Local/Testing Use)</h3>
+                    <p>The application already includes a pre-configured integrated PHP web server with SQLite database drivers. No extra installation is required.</p>
+                    <ol>
+                        <li>Access the <code>RMAGest</code> folder.</li>
+                        <li>Double-click the <strong><code>Iniciar - Start.bat</code></strong> file. A console window will open, and your default web browser will automatically open <code>http://localhost:8080/</code>.</li>
+                        <li>Follow the guided web installer and select the <strong>SQLite (Recommended)</strong> database engine to complete the setup in seconds.</li>
+                        <li><strong>Important:</strong> Do not close the console window while using the application. To stop the server safely, close the console window or double-click <strong><code>Parar - Stop.bat</code></strong>.</li>
+                    </ol>
+
+                    <h3>Option B: Installing on Your Own Web Server (Custom/Production)</h3>
+                    <p>If you prefer to host RMA Gest on your own environment (e.g. Linux cloud server, shared cPanel hosting, or locally using XAMPP/WAMP/Laragon):</p>
+                    <ol>
+                        <li><strong>Copy the Files:</strong> Copy all contents of the <strong><code>www</code></strong> folder to your web server's public directory (e.g., <code>/var/www/html/</code> on Linux, <code>public_html/</code> on cPanel, or <code>htdocs/</code> in XAMPP).</li>
+                        <li><strong>Access via Browser:</strong> Navigate to your server's URL in your web browser (e.g., <code>http://your-domain.com/</code> or <code>http://localhost/</code>).</li>
+                        <li><strong>Guided Installer:</strong> The system will detect the missing <code>config.php</code> file and redirect you to the guided web installer (<code>install.php</code>).</li>
+                        <li><strong>Database Setup:</strong>
+                            <ul>
+                                <li><strong>If using SQLite (Recommended):</strong> Select SQLite in the installer. The database file will be created at <code>src/rmagest.sqlite</code>. Ensure that the <code>src</code> directory has **write permissions** (e.g., <code>chmod 775</code> or <code>777</code> on Linux) so PHP can read and write to the local database file.</li>
+                                <li><strong>If using MySQL/MariaDB:</strong> Create a clean database in your hosting panel (e.g. phpMyAdmin) and enter the connection details (Host, Port, User, Password, and Database Name) in the installer.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Final Configurations:</strong> Complete the company details, upload your logo, configure SMTP mail settings, and create your administrator account. The installer will generate the <code>config.php</code> file automatically.</li>
+                    </ol>
+                </section>
+
+                <!-- Section 3 -->
+                <section id="en-client" class="card">
+                    <h2>👥 3. Client Area (Public Portal)</h2>
+                    <p>The public portal allows customers to interact directly with the repair shop in an intuitive way.</p>
+                    
+                    <div class="image-container">
+                        <img src="assets/images/client_portal.png" class="mockup-img" alt="Public Client Portal">
+                        <div class="image-caption">Public search and online repair request screen for customers.</div>
+                    </div>
+
+                    <h3>Available Features:</h3>
+                    <ul>
+                        <li><strong>Search Repair by Code:</strong> Customers enter their tracking code (e.g. <code>REP-2026-00001</code>) in the Google-style search bar to instantly see their device's current stage.</li>
+                        <li><strong>Online Repair Request (RMA Form):</strong> Customers fill out their contact details, describe the device symptoms, and optionally upload a photograph of the physical condition.</li>
+                        <li><strong>Real-Time Tracking:</strong> An interactive timeline displays the repair progress (<em>Under analysis, Under Diagnostics, Repaired, etc.</em>).</li>
+                        <li><strong>Budget View:</strong> Clients can see the estimated cost and the budget status (Pending Decision or Paid/Approved).</li>
+                        <li><strong>Conversational Support:</strong> By entering the unique 6-digit access code sent to their email or WhatsApp, the client unlocks a secure chat with the technician to discuss budgets or upload files.</li>
+                    </ul>
+                </section>
+
+                <!-- Section 4 -->
+                <section id="en-technical" class="card">
+                    <h2>🛠️ 4. Technical Area (Technician Panel)</h2>
+                    <p>Navigate to <code>index.php?route=tech/login</code> and authenticate using your credentials to access the laboratory dashboard.</p>
+
+                    <div class="image-container">
+                        <img src="assets/images/tech_dashboard.png" class="mockup-img" alt="Technician Dashboard">
+                        <div class="image-caption">Main technician dashboard displaying overall statistics and active repairs.</div>
+                    </div>
+
+                    <h3>4.1. Dashboard Overview</h3>
+                    <p>Provides critical indicators in real-time:</p>
+                    <ul>
+                        <li><strong>Quick KPIs:</strong> Count of active tickets in progress, tickets on hold waiting for client decision, repaired devices ready for pick-up, and inventory items with low stock.</li>
+                        <li><strong>Advanced Filtering:</strong> Search repair sheets by RMA code, customer name, or device, and filter by statuses.</li>
+                    </ul>
+
+                    <h3>4.2. RMA Sheet Management</h3>
+                    <p>Opening any RMA ticket from the list provides the following tools:</p>
+                    <ul>
+                        <li><strong>Update Status & Notify:</strong> When changing the status of a repair and adding a public comment, the system automatically dispatches an email or WhatsApp notification to the client.</li>
+                        <li><strong>Private Diagnostic Notes:</strong> Write internal laboratory logs visible only to technical staff.</li>
+                        <li><strong>Parts and Inventory Deductions:</strong> Add parts used during the repair. You can deduct parts directly from the global workshop stock or input them manually (setting quantity and price). The total cost updates automatically.</li>
+                        <li><strong>Assistance Reports:</strong> Print a complete technical ticket to attach physically to the device or hand over to the customer.</li>
+                        <li><strong>Direct Chat Feed:</strong> Real-time conversation channel to negotiate budgets and send pictures of damaged hardware.</li>
+                        <li><strong>GDPR "Forget Customer":</strong> Permanently and irreversibly wipes the customer's personal data from the repair sheet to comply with privacy rules, retaining only the billing details.</li>
+                    </ul>
+
+                    <h3>4.3. Stock Control (Inventory)</h3>
+                    <p>Manage spare parts and workshop consumables (e.g. LCD Screens, Batteries, Solid State Drives):</p>
+                    <ul>
+                        <li>Register stock items with SKU references, available quantity, and sale unit prices.</li>
+                        <li>Triggers visual warnings when quantities fall below safety thresholds.</li>
+                    </ul>
+
+                    <h3>4.4. Reports & Statistics</h3>
+                    <p>Filter data by date ranges to analyze estimated invoice volumes, total billed (paid), and total pending budgets.</p>
+                </section>
+
+                <!-- Section 5 -->
+                <section id="en-settings" class="card">
+                    <h2>⚙️ 5. Global System Settings</h2>
+                    <p>Reserved for administrators to customize the core settings of the application:</p>
+                    <ol>
+                        <li><strong>General:</strong> Workshop name, company logo image, and browser tab favicon.</li>
+                        <li><strong>Email Settings (SMTP):</strong> Server settings for automated notifications.</li>
+                        <li><strong>Workflow Statuses:</strong> Add, reorder, or delete custom steps displayed on the client's timeline.</li>
+                        <li><strong>Device Types:</strong> Categories of equipment accepted in the laboratory.</li>
+                        <li><strong>Users & Permissions:</strong> Add technical users and configure granular permissions (access to settings, inventory, reports, deleting tickets, etc.).</li>
+                        <li><strong>WhatsApp Integrations:</strong> Configure your WhatsApp Gateway API endpoint, define auth tokens, and customize JSON payloads using <code>{phone}</code> and <code>{message}</code> variables.</li>
+                        <li><strong>Message Templates:</strong> Customize notifications triggered by key events (new ticket submit, status update, chat message) with support for placeholders like <code>{client_name}</code>, <code>{rma_number}</code>, etc.</li>
+                        <li><strong>Integration Code (Widget Generator):</strong> A visual builder to generate external search boxes. Copy the generated HTML/CSS block to place it on your corporate website, allowing customers to query their repair status directly from your homepage.</li>
+                        <li><strong>Form Builder:</strong> Customize the public repair request form using a drag-and-drop interface, tailoring the collected data to your business model.</li>
+                    </ol>
+                </section>
+            </div>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <p>RMA Gest — Sistema de Gestão de Fichas de Reparação e RMA.</p>
+                <p>Desenvolvido por Luís Patrício — <a href="http://www.lplogic.net" target="_blank">www.lplogic.net</a></p>
+            </footer>
+
+        </main>
+    </div>
+
+    <!-- JavaScript to toggle language -->
+    <script>
+        function setLanguage(lang) {
+            const ptElements = document.querySelectorAll('.lang-pt');
+            const enElements = document.querySelectorAll('.lang-en');
+            const btnPt = document.getElementById('btn-pt');
+            const btnEn = document.getElementById('btn-en');
+            const slider = document.querySelector('.lang-switcher .slider');
+            const htmlTag = document.documentElement;
+
+            if (lang === 'pt') {
+                ptElements.forEach(el => el.style.display = 'block');
+                enElements.forEach(el => el.style.display = 'none');
+                btnPt.classList.add('active');
+                btnEn.classList.remove('active');
+                slider.style.transform = 'translateX(0)';
+                htmlTag.setAttribute('lang', 'pt');
+                document.title = "RMA Gest — Manual de Instalação e Utilização";
+            } else {
+                ptElements.forEach(el => el.style.display = 'none');
+                enElements.forEach(el => el.style.display = 'block');
+                btnPt.classList.remove('active');
+                btnEn.classList.add('active');
+                slider.style.transform = 'translateX(121px)';
+                htmlTag.setAttribute('lang', 'en');
+                document.title = "RMA Gest — Installation & Usage Manual";
+            }
+        }
+    </script>
+</body>
+</html>
